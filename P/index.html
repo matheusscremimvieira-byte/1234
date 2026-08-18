@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Semáforo</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #222;
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .semaforo {
+            width: 120px;
+            height: 320px;
+            background-color: #333;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .luz {
+            width: 80px;
+            height: 80px;
+            background-color: #444;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Cores quando ativas */
+        .luz.vermelho.ativo {
+            background-color: #ff3333;
+            box-shadow: 0 0 20px #ff3333;
+        }
+
+        .luz.laranja.ativo {
+            background-color: #ffaa00;
+            box-shadow: 0 0 20px #ffaa00;
+        }
+
+        .luz.verde.ativo {
+            background-color: #33ff33;
+            box-shadow: 0 0 20px #33ff33;
+        }
+
+        .temporizador {
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Simulador de Semáforo</h1>
+
+    <div class="semaforo">
+        <div id="vermelho" class="luz vermelho"></div>
+        <div id="laranja" class="luz laranja"></div>
+        <div id="verde" class="luz verde"></div>
+    </div>
+
+    <div class="temporizador">Tempo restante: <span id="tempo">0</span>s</div>
+
+    <script>
+        const luzVermelho = document.getElementById('vermelho');
+        const luzLaranja = document.getElementById('laranja');
+        const luzVerde = document.getElementById('verde');
+        const textoTempo = document.getElementById('tempo');
+
+        // Configuração dos tempos em segundos
+        const tempos = {
+            verde: 6,
+            laranja: 3,
+            vermelho: 6
+        };
+
+        let estadoAtual = 'verde'; // Começa no verde
+        let tempoRestante = tempos[estadoAtual];
+
+        function atualizarSemaforo() {
+            // Remove a classe 'ativo' de todas as luzes
+            luzVermelho.classList.remove('ativo');
+            luzLaranja.classList.remove('ativo');
+            luzVerde.classList.remove('ativo');
+
+            // Ativa a luz do estado atual
+            if (estadoAtual === 'verde') {
+                luzVerde.classList.add('ativo');
+            } else if (estadoAtual === 'laranja') {
+                luzLaranja.classList.add('ativo');
+            } else if (estadoAtual === 'vermelho') {
+                luzVermelho.classList.add('ativo');
+            }
+        }
+
+        function alternarEstado() {
+            if (estadoAtual === 'verde') {
+                estadoAtual = 'laranja';
+            } else if (estadoAtual === 'laranja') {
+                estadoAtual = 'vermelho';
+            } else if (estadoAtual === 'vermelho') {
+                estadoAtual = 'verde';
+            }
+            tempoRestante = tempos[estadoAtual];
+            atualizarSemaforo();
+        }
+
+        // Loop do temporizador (roda a cada 1 segundo)
+        setInterval(() => {
+            textoTempo.textContent = tempoRestante;
+
+            if (tempoRestante <= 0) {
+                alternarEstado();
+            } else {
+                tempoRestante--;
+            }
+        }, 1000);
+
+        // Inicialização
+        atualizarSemaforo();
+        textoTempo.textContent = tempoRestante;
+    </script>
+</body>
+
+</html>
